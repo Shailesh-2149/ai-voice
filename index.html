@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Voice</title>
+</head>
+
+<body style="text-align:center; font-family:sans-serif;">
+
+<h2>🔥 AI Voice Generator</h2>
+
+<input id="text" placeholder="Type here..." style="padding:10px;width:80%;"><br><br>
+
+<select id="emotion">
+<option value="normal">Normal</option>
+<option value="happy">Happy 🔒</option>
+<option value="sad">Sad 🔒</option>
+</select><br><br>
+
+<button onclick="speak()">Generate Voice</button>
+
+<script>
+let isPremium = false;
+
+function speak(){
+let text = document.getElementById("text").value;
+let emotion = document.getElementById("emotion").value;
+
+if(!isPremium && emotion !== "normal"){
+alert("Premium Feature 🔒");
+return;
+}
+
+let msg = new SpeechSynthesisUtterance(text);
+
+if(emotion=="happy"){msg.rate=1.2;}
+if(emotion=="sad"){msg.rate=0.7;}
+
+speechSynthesis.cancel();
+speechSynthesis.speak(msg);
+}
+</script>
+
+</body>
+</html>
