@@ -1,42 +1,85 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>AI Voice</title>
+<title>🔥 AI Voice Generator Pro</title>
+<style>
+body{
+  background:#0f172a;
+  color:white;
+  font-family:sans-serif;
+  text-align:center;
+  padding:20px;
+}
+h1{color:#38bdf8;}
+input,select,button{
+  padding:10px;
+  margin:10px;
+  border-radius:8px;
+  border:none;
+}
+button{
+  background:#38bdf8;
+  color:black;
+  cursor:pointer;
+}
+button:hover{
+  background:#0ea5e9;
+}
+</style>
 </head>
 
-<body style="text-align:center; font-family:sans-serif;">
+<body>
 
-<h2>🔥 AI Voice Generator</h2>
+<h1>🔥 AI Voice Generator</h1>
 
-<input id="text" placeholder="Type here..." style="padding:10px;width:80%;"><br><br>
+<input id="text" placeholder="Type something..." style="width:80%"><br>
 
-<select id="emotion">
-<option value="normal">Normal</option>
-<option value="happy">Happy 🔒</option>
-<option value="sad">Sad 🔒</option>
-</select><br><br>
+<select id="voice"></select><br>
+
+<label>Speed:</label>
+<input type="range" id="rate" min="0.5" max="2" step="0.1" value="1"><br>
+
+<label>Pitch:</label>
+<input type="range" id="pitch" min="0" max="2" step="0.1" value="1"><br>
 
 <button onclick="speak()">Generate Voice</button>
+<button onclick="stop()">Stop</button>
 
 <script>
-let isPremium = false;
+let voices = [];
 
-function speak(){
-let text = document.getElementById("text").value;
-let emotion = document.getElementById("emotion").value;
+function loadVoices(){
+  voices = speechSynthesis.getVoices();
+  let voiceSelect = document.getElementById("voice");
+  voiceSelect.innerHTML = "";
 
-if(!isPremium && emotion !== "normal"){
-alert("Premium Feature 🔒");
-return;
+  voices.forEach((v,i)=>{
+    let option = document.createElement("option");
+    option.value = i;
+    option.text = v.name + " (" + v.lang + ")";
+    voiceSelect.appendChild(option);
+  });
 }
 
-let msg = new SpeechSynthesisUtterance(text);
+speechSynthesis.onvoiceschanged = loadVoices;
 
-if(emotion=="happy"){msg.rate=1.2;}
-if(emotion=="sad"){msg.rate=0.7;}
+function speak(){
+  let text = document.getElementById("text").value;
+  let voiceIndex = document.getElementById("voice").value;
+  let rate = document.getElementById("rate").value;
+  let pitch = document.getElementById("pitch").value;
 
-speechSynthesis.cancel();
-speechSynthesis.speak(msg);
+  let msg = new SpeechSynthesisUtterance(text);
+  msg.voice = voices[voiceIndex];
+  msg.rate = rate;
+  msg.pitch = pitch;
+
+  speechSynthesis.cancel();
+  speechSynthesis.speak(msg);
+}
+
+function stop(){
+  speechSynthesis.cancel();
 }
 </script>
 
